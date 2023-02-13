@@ -8,17 +8,24 @@ import FormItem from './FormItem';
 function App() {
   const deleteItem = async (id) => {
     setIsLoading(true)
-    const esto = await fetch(`http://localhost:5000/items/${id}`, {
-      method: 'DELETE',
-    }).then(response => response.json())
-    await fetchData()
+    try {
+      const response = await fetch(`http://localhost:5000/items/${id}`, {
+        method: 'DELETE'
+      })
+      await response.json()
+      fetchData()
+    } catch (error) {
+      throw new Error(error)
+    }
     setIsLoading(false)
   }
 
   const showModal = async (id) => {
+    console.log('show', id)
     const esto = await fetch(`http://localhost:5000/items/${id}`, {
       method: 'GET',
     }).then(response => response.json())
+    console.log(esto)
     setItem(esto)
     setIsModalOpen(true);
 
@@ -57,7 +64,7 @@ function App() {
             {"Delete"}
           </Button>
           <Button onClick={() => showModal(record._id)}>
-            {"More info"}
+            {"Modify"}
           </Button>
         </div>
       ),
@@ -77,13 +84,14 @@ function App() {
   useEffect(() => {
     fetchData()
       .catch(console.error)
-  }, []);
+  }, [])
+
   return (
     <div className="App">
       {isLoading ? 'loading' : <Table dataSource={items} columns={columns} />}
 
-      <Modal title="Basic Modal" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <p>{item.name}</p>
+      <Modal title="Modify" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+        <FormItem data={item} fetchData={fetchData}></FormItem>
       </Modal>
       <FormItem fetchData={fetchData}></FormItem>
     </div>

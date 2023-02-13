@@ -1,4 +1,7 @@
 import { Button, Form, Input, InputNumber } from 'antd';
+import { useEffect, useState } from 'react';
+
+
 const layout = {
     labelCol: {
         span: 8,
@@ -22,11 +25,23 @@ const validateMessages = {
 /* eslint-enable no-template-curly-in-string */
 
 
-function FormItem({ fetchData }) {
+function FormItem({ fetchData, data }) {
+    const [form] = Form.useForm()
+
+    useEffect(() => {
+        form.setFieldsValue(data)
+    }, [form, data])
     const onFinish = async (values) => {
+        let method = 'POST'
+        let url = 'http://localhost:5000/items'
         const { item } = values
-        await fetch('http://localhost:5000/items', {
-            method: 'POST',
+
+        if (data) {
+            method = 'PUT'
+            url = url + `/${data._id}`
+        }
+        await fetch(url, {
+            method,
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(item)
 
@@ -34,11 +49,12 @@ function FormItem({ fetchData }) {
         fetchData()
 
     };
-    return (
+    return (<div>
         <Form
             {...layout}
             name="nest-messages"
             onFinish={onFinish}
+            initialValues={data}
             style={{
                 maxWidth: 600,
             }}
@@ -52,6 +68,8 @@ function FormItem({ fetchData }) {
                         required: true,
                     },
                 ]}
+                initialValue={data ? data.name : ""}
+
             >
                 <Input />
             </Form.Item>
@@ -63,8 +81,10 @@ function FormItem({ fetchData }) {
                         required: true
                     },
                 ]}
+                initialValue={data ? data.price : ""}
+
             >
-                <Input />
+                <InputNumber />
             </Form.Item>
 
 
@@ -80,7 +100,7 @@ function FormItem({ fetchData }) {
                 </Button>
             </Form.Item>
         </Form>
-
+    </div>
     );
 }
 export default FormItem;
