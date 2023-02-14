@@ -1,99 +1,40 @@
 import './App.css';
-import { useState, useEffect } from 'react'
-import { Table, Modal, Button } from 'antd'
-import type { ColumnsType } from 'antd/es/table'
-import FormItem from './FormItem';
+import React from 'react';
+import { Card } from 'antd';
 
+
+const gridStyle: React.CSSProperties = {
+  width: '33.3%',
+  textAlign: 'center',
+};
 
 function App() {
-  const deleteItem = async (id) => {
-    setIsLoading(true)
-    try {
-      const response = await fetch(`http://localhost:5000/items/${id}`, {
-        method: 'DELETE'
-      })
-      await response.json()
-      fetchData()
-    } catch (error) {
-      throw new Error(error)
-    }
-    setIsLoading(false)
-  }
-
-  const showModal = async (id) => {
-    console.log('show', id)
-    const esto = await fetch(`http://localhost:5000/items/${id}`, {
-      method: 'GET',
-    }).then(response => response.json())
-    console.log(esto)
-    setItem(esto)
-    setIsModalOpen(true);
-
-  };
-
-  const handleOk = () => {
-    setIsModalOpen(false);
-  };
-
-  const handleCancel = () => {
-    setIsModalOpen(false);
-  };
-
-  const columns: ColumnsType<DataType> = [
-    {
-      title: 'Id',
-      dataIndex: '_id',
-      key: '_id',
-    },
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-    },
-    {
-      title: 'Price',
-      dataIndex: 'price',
-      key: 'price',
-    },
-    {
-      title: 'Actions',
-      key: 'action',
-      render: (_, record) => (
-        <div>
-          <Button onClick={() => deleteItem(record._id)}>
-            {"Delete"}
-          </Button>
-          <Button onClick={() => showModal(record._id)}>
-            {"Modify"}
-          </Button>
-        </div>
-      ),
-    },
-  ]
-
-  const [items, setItems] = useState([]);
-  const [item, setItem] = useState({})
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false)
-
-  async function fetchData() {
-    const response = await fetch('http://localhost:5000/items')
-    setItems(await response.json())
-  }
-
-  useEffect(() => {
-    fetchData()
-      .catch(console.error)
-  }, [])
-
   return (
     <div className="App">
-      {isLoading ? 'loading' : <Table dataSource={items} columns={columns} />}
-
-      <Modal title="Modify" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
-        <FormItem data={item} fetchData={fetchData}></FormItem>
-      </Modal>
-      <FormItem fetchData={fetchData}></FormItem>
+      <Card title="Features">
+        <Card.Grid style={gridStyle}>
+          <a
+            href={`items/list`}
+          >
+            View Items
+          </a>
+        </Card.Grid>
+        <Card.Grid style={gridStyle}>
+          <a
+            href={`items/create`}
+          >
+            Create Item
+          </a>
+        </Card.Grid>
+        <Card.Grid style={gridStyle}>
+          <a
+            href={`products/create`}
+          >
+            Create Product
+          </a>
+        </Card.Grid>
+        <Card.Grid style={gridStyle}>Content</Card.Grid>
+      </Card>
     </div>
   );
 }

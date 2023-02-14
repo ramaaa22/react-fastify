@@ -1,5 +1,5 @@
-import { Button, Form, Input, InputNumber } from 'antd';
-import { useEffect } from 'react';
+import { Button, Form, Input, Select } from 'antd';
+import { useEffect, useState } from 'react';
 import './App.css';
 
 
@@ -10,6 +10,10 @@ const layout = {
     wrapperCol: {
         span: 16,
     },
+};
+
+const handleChange = (value) => {
+    console.log(`selected ${value}`);
 };
 
 /* eslint-disable no-template-curly-in-string */
@@ -26,16 +30,37 @@ const validateMessages = {
 /* eslint-enable no-template-curly-in-string */
 
 
-function FormItem({ fetchData, data }) {
+function FormProduct({ fetchData, data }) {
     const [form] = Form.useForm()
+    const [items, setItems] = useState([])
 
     useEffect(() => {
         form.setFieldsValue(data)
     }, [form, data])
+
+    useEffect(() => {
+        getItems()
+    }, [])
+
+    const getItems = async () => {
+        try {
+            const response = await fetch(`http://localhost:5000/items`, {
+                method: 'GET'
+            })
+            const items = await response.json()
+            const fields = []
+            items.map(it => fields.push({ value: it._id, label: it.name }))
+            setItems(fields)
+        } catch (error) {
+            throw new Error(error)
+        }
+    }
+
     const onFinish = async (values) => {
         let method = 'POST'
-        let url = 'http://localhost:5000/items'
-        const { item } = values
+        let url = 'http://localhost:5000/products'
+        const { product } = values
+        console.log('product', product)
 
         if (data) {
             method = 'PUT'
@@ -44,7 +69,7 @@ function FormItem({ fetchData, data }) {
         await fetch(url, {
             method,
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(item)
+            body: JSON.stringify(product)
 
         }).then(response => response.json())
         fetchData()
@@ -62,7 +87,7 @@ function FormItem({ fetchData, data }) {
             validateMessages={validateMessages}
         >
             <Form.Item
-                name={['item', 'name']}
+                name={['product', 'name']}
                 label="Name"
                 rules={[
                     {
@@ -74,20 +99,26 @@ function FormItem({ fetchData, data }) {
             >
                 <Input className='FormItemInput' />
             </Form.Item>
+
             <Form.Item
-                name={['item', 'price']}
-                label="Price"
+                name={['product', 'item']}
+                label="Item"
                 rules={[
                     {
-                        required: true
+                        required: true,
                     },
                 ]}
-                initialValue={data ? data.price : ""}
-
+                initialValue={data ? data.name : ""}
             >
-                <InputNumber className='FormItemInput' />
+                <Select
+                    style={{
+                        width: 120,
+                    }}
+                    placeholder="Select Item"
+                    onChange={handleChange}
+                    options={items}
+                />
             </Form.Item>
-
             <Form.Item
                 wrapperCol={{
                     ...layout.wrapperCol,
@@ -102,4 +133,4 @@ function FormItem({ fetchData, data }) {
     </div>
     );
 }
-export default FormItem;
+export default FormProduct;
