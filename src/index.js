@@ -4,6 +4,8 @@ import './index.css';
 import App from './App';
 import FormItem from './FormItem';
 import ListItem from './ListItem';
+import ListProduct from './ListProduct';
+
 
 import {
   createBrowserRouter,
@@ -27,6 +29,10 @@ const router = createBrowserRouter([
   {
     path: "products/create",
     element: <FormProduct />,
+  },
+  {
+    path: "products/list",
+    element: <ListProduct />,
   },
 ]);
 

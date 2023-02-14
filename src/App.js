@@ -1,6 +1,7 @@
 import './App.css';
 import React from 'react';
 import { Card } from 'antd';
+import Menu from './Menu'
 
 
 const gridStyle: React.CSSProperties = {
@@ -11,6 +12,7 @@ const gridStyle: React.CSSProperties = {
 function App() {
   return (
     <div className="App">
+      <Menu />
       <Card title="Features">
         <Card.Grid style={gridStyle}>
           <a
@@ -33,7 +35,14 @@ function App() {
             Create Product
           </a>
         </Card.Grid>
-        <Card.Grid style={gridStyle}>Content</Card.Grid>
+        <Card.Grid style={gridStyle}>
+          <a
+            href={`products/list`}
+          >
+            List Products
+          </a>
+        </Card.Grid>
+
       </Card>
     </div>
   );

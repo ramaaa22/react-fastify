@@ -33,6 +33,7 @@ const validateMessages = {
 function FormProduct({ fetchData, data }) {
     const [form] = Form.useForm()
     const [items, setItems] = useState([])
+    const [error, setError] = useState('')
 
     useEffect(() => {
         form.setFieldsValue(data)
@@ -66,14 +67,20 @@ function FormProduct({ fetchData, data }) {
             method = 'PUT'
             url = url + `/${data._id}`
         }
-        await fetch(url, {
-            method,
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(product)
+        try {
+            const response = await fetch(url, {
+                method,
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(product)
 
-        }).then(response => response.json())
-        fetchData()
-
+            })
+            console.log(response)
+            if (!response.ok) {
+                setError(response.statusText)
+            }
+        } catch (error) {
+            console.error(error)
+        }
     };
     return (<div className='FormItem'>
         <Form
@@ -130,6 +137,7 @@ function FormProduct({ fetchData, data }) {
                 </Button>
             </Form.Item>
         </Form>
+        <p>{error ? error : 'jaja'}</p>
     </div>
     );
 }

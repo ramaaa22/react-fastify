@@ -1,6 +1,7 @@
 import { Button, Form, Input, InputNumber } from 'antd';
 import { useEffect } from 'react';
 import './App.css';
+import Menu from './Menu';
 
 
 const layout = {
@@ -50,56 +51,60 @@ function FormItem({ fetchData, data }) {
         fetchData()
 
     };
-    return (<div className='FormItem'>
-        <Form
-            {...layout}
-            name="nest-messages"
-            onFinish={onFinish}
-            initialValues={data}
-            style={{
-                maxWidth: 600,
-            }}
-            validateMessages={validateMessages}
-        >
-            <Form.Item
-                name={['item', 'name']}
-                label="Name"
-                rules={[
-                    {
-                        required: true,
-                    },
-                ]}
-                initialValue={data ? data.name : ""}
+    return (
+        <div>
+            <Menu />
+            <div className='FormItem'>
+                <Form
+                    {...layout}
+                    name="nest-messages"
+                    onFinish={onFinish}
+                    initialValues={data}
+                    style={{
+                        maxWidth: 600,
+                    }}
+                    validateMessages={validateMessages}
+                >
+                    <Form.Item
+                        name={['item', 'name']}
+                        label="Name"
+                        rules={[
+                            {
+                                required: true,
+                            },
+                        ]}
+                        initialValue={data ? data.name : ""}
 
-            >
-                <Input className='FormItemInput' />
-            </Form.Item>
-            <Form.Item
-                name={['item', 'price']}
-                label="Price"
-                rules={[
-                    {
-                        required: true
-                    },
-                ]}
-                initialValue={data ? data.price : ""}
+                    >
+                        <Input className='FormItemInput' />
+                    </Form.Item>
+                    <Form.Item
+                        name={['item', 'price']}
+                        label="Price"
+                        rules={[
+                            {
+                                required: true
+                            },
+                        ]}
+                        initialValue={data ? data.price : ""}
 
-            >
-                <InputNumber className='FormItemInput' />
-            </Form.Item>
+                    >
+                        <InputNumber className='FormItemInput' />
+                    </Form.Item>
 
-            <Form.Item
-                wrapperCol={{
-                    ...layout.wrapperCol,
-                    offset: 8,
-                }}
-            >
-                <Button type="primary" htmlType="submit" className='FormItemButton'>
-                    Submit
-                </Button>
-            </Form.Item>
-        </Form>
-    </div>
+                    <Form.Item
+                        wrapperCol={{
+                            ...layout.wrapperCol,
+                            offset: 8,
+                        }}
+                    >
+                        <Button type="primary" htmlType="submit" className='FormItemButton'>
+                            Submit
+                        </Button>
+                    </Form.Item>
+                </Form>
+            </div>
+        </div>
     );
 }
 export default FormItem;
